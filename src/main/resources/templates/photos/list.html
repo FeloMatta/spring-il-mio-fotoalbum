@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:insert="~{/fragments/resources :: head(pageTitle='Photo List')}">
+</head>
+<body>
+<div class="container">
+    <h1 class="text-center">Photo List</h1>
+    <div class="d-flex gap-3">
+        <div class="card" style="width: 18rem;" th:each="photo : ${photoList}">
+            <img alt="..." class="card-img-top object-fit-cover" th:src="${photo.url}">
+            <div class="card-body">
+                <h5 class="card-title" th:text="${photo.title}"></h5>
+                <p class="card-text" th:text="${photo.description}"></p>
+                <a class="btn btn-primary" href="#">Go somewhere</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
