@@ -1,6 +1,7 @@
 package org.lessons.springphotogallery.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "photos")
@@ -9,10 +10,12 @@ public class Photo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Column(nullable = false)
+    @NotBlank(message = "Title must not be null or blank")
     private String title;
     @Column(nullable = false)
     private String description;
     @Column(nullable = false, unique = true)
+    @NotBlank(message = "Url must not be null or blank")
     private String url;
     private boolean visible = true;
 

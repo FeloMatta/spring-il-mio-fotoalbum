@@ -3,15 +3,32 @@
 <head th:insert="~{/fragments/resources :: head(pageTitle='Photo List')}">
 </head>
 <body>
+<nav th:replace="~{/fragments/navbar :: navbar(current='photos')}"></nav>
 <div class="container">
     <h1 class="text-center">Photo List</h1>
+    <div class="d-flex justify-content-between align-items-center my-3">
+        <!-- link di add new book -->
+        <a class="btn btn-primary" th:href="@{/photos/create}">Add Photo</a>
+        <!-- form di ricerca -->
+        <div>
+            <form method="GET" th:action="@{/photos}">
+                <div class="input-group">
+                    <input class="form-control" name="keyword" placeholder="Search by title"
+                           th:value="${searchInput}" type="search">
+                    <button class="btn btn-outline-secondary" type="submit">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
     <div class="d-flex gap-3">
         <div class="card" style="width: 18rem;" th:each="photo : ${photoList}">
             <img alt="..." class="card-img-top object-fit-cover" th:src="${photo.url}">
             <div class="card-body">
                 <h5 class="card-title" th:text="${photo.title}"></h5>
                 <p class="card-text" th:text="${photo.description}"></p>
-                <a class="btn btn-primary" href="#">Go somewhere</a>
+                <a th:href="@{|/photos/${photo.id}|}"><i class="fa-solid fa-book"></i></a>
             </div>
         </div>
     </div>

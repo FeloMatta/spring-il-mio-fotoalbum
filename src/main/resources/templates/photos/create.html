@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <head th:insert="~{/fragments/resources :: head(pageTitle='New Photo')}">
+    </head>
+<body>
+<nav th:replace="~{/fragments/navbar :: navbar(current='photos')}"></nav>
+<div class="container">
+    <h1>New Photo</h1>
+    <hr>
+
+    <form
+            class="row"
+            id="photo-form"
+            method="post"
+            th:action="@{/photos/create}"
+            th:object="${photo}"
+    >
+
+        <div class="col-6">
+            <label class="form-label" for="photo-title">Title</label>
+            <input class="form-control" id="photo-title" th:errorClass="is-invalid" th:field="*{title}"
+                   type="text">
+            <div class="form-text">Title must not be blank</div>
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('title')}">
+                <ul>
+                    <li th:each="err : ${#fields.errors('title')}" th:text="${err}"></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-6">
+            <label class="form-label" for="description">Description</label>
+            <input class="form-control" id="description" th:field="*{description}" type="text">
+        </div>
+        <div class="col-6">
+            <label class="form-label" for="url">Url Photo</label>
+            <input class="form-control" id="url" th:field="*{url}" type="text">
+            <div class="form-text">Url must not be blank</div>
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('title')}">
+                <ul>
+                    <li th:each="err : ${#fields.errors('url')}" th:text="${err}"></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-12 mt-3">
+            <button class="btn btn-primary" type="submit">Save</button>
+            <a class="btn btn-primary" th:href="@{/photos}">Cancel</a>
+        </div>
+    </form>
+</div>
+</body>
+</html>
