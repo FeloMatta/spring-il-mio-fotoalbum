@@ -40,10 +40,11 @@ public class SecurityConfiguration {
                 .requestMatchers("/photos/edit/**").hasAuthority("ADMIN")
                 .requestMatchers("/photos/create").hasAuthority("ADMIN")
                 .requestMatchers("/photos/**").hasAnyAuthority("ADMIN", "USER")
-                .requestMatchers(HttpMethod.POST).hasAuthority("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/photos/**").hasAuthority("ADMIN")
                 .requestMatchers("/**").permitAll()
                 .and().formLogin()
                 .and().logout();
+        http.csrf().disable();
         return http.build();
     }
 }
