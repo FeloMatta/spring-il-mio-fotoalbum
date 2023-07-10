@@ -1,5 +1,6 @@
 package org.lessons.springphotogallery.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ public class Category {
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "categories")
     private List<Photo> photos = new ArrayList<>();
 
