@@ -3,6 +3,9 @@ package org.lessons.springphotogallery.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "photos")
 public class Photo {
@@ -18,6 +21,22 @@ public class Photo {
     @NotBlank(message = "Url must not be null or blank")
     private String url;
     private boolean visible = true;
+
+    @ManyToMany
+    @JoinTable(
+            name = "photo_category",
+            joinColumns = @JoinColumn(name = "photo_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    private List<Category> categories = new ArrayList<>();
+
+    public List<Category> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(List<Category> categories) {
+        this.categories = categories;
+    }
 
     public Integer getId() {
         return id;

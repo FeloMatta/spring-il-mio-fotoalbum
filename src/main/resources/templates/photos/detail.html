@@ -8,6 +8,14 @@
 
     <h2>Description</h2>
     <h4 th:text="*{description}"></h4>
+
+    <div class="col-4">
+        <h3>Categories</h3>
+        <ul th:if="*{categories.size() > 0}">
+            <li th:each="cat : *{categories}" th:text="${cat.name}"></li>
+        </ul>
+        <div class="alert alert-info" th:unless="*{categories.size() > 0}">No categories</div>
+    </div>
 </div>
 </body>
 </html>

@@ -1,20 +1,22 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <head th:insert="~{/fragments/resources :: head(pageTitle='New Photo')}">
+    <head th:insert="~{/fragments/resources :: head(pageTitle='Photo form')}">
     </head>
-<body>
+<body th:with="isEdit=${photo.id != null}">
 <nav th:replace="~{/fragments/navbar :: navbar(current='photos')}"></nav>
 <div class="container">
-    <h1>New Photo</h1>
+    <h1 th:text="${isEdit ? 'Edit Photo' : 'New Photo'}"></h1>
     <hr>
 
     <form
             class="row"
             id="photo-form"
             method="post"
-            th:action="@{/photos/create}"
+            th:action="@{${formAction}}"
             th:object="${photo}"
+            th:with="formAction=${isEdit ? '/photos/edit/'+ photo.id : '/photos/create'}"
+
     >
 
         <div class="col-6">
@@ -47,6 +49,15 @@
             <a class="btn btn-primary" th:href="@{/photos}">Cancel</a>
         </div>
     </form>
+    <div class="col-4">
+        <h3>Categories</h3>
+        <div class="form-check" th:each="cat : ${categoryList}">
+            <input class="form-check-input" th:id="|cat_${cat.id}|"
+                   th:value="${cat.id}" type="checkbox">
+            <label class="form-check-label" th:for="|cat_${cat.id}|" th:text="${cat.name}">
+            </label>
+        </div>
+    </div>
 </div>
 </body>
 </html>

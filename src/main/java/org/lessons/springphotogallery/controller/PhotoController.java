@@ -2,6 +2,7 @@ package org.lessons.springphotogallery.controller;
 
 import jakarta.validation.Valid;
 import org.lessons.springphotogallery.model.Photo;
+import org.lessons.springphotogallery.repository.CategoryRepository;
 import org.lessons.springphotogallery.repository.PhotoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +21,9 @@ import java.util.Optional;
 public class PhotoController {
     @Autowired
     private PhotoRepository photoRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
 
 //    @GetMapping
 //    public String list(Model model) {
@@ -57,16 +62,64 @@ public class PhotoController {
     @GetMapping("/create")
     public String create(Model model) {
         model.addAttribute("photo", new Photo());
-        return "/photos/create";
+        model.addAttribute("categoryList", categoryRepository.findAll());
+        return "/photos/edit";
     }
 
     @PostMapping("/create")
-    public String store(@Valid @ModelAttribute("photo") Photo formPhoto, BindingResult bindingResult) {
+    public String store(@Valid @ModelAttribute("photo") Photo formPhoto, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
-            return "/photos/create";
+            model.addAttribute("categoryList", categoryRepository.findAll());
+            return "/photos/edit";
         }
         photoRepository.save(formPhoto);
         return "redirect:/photos";
     }
+
+    @GetMapping("/edit/{id}")
+    public String edit(@PathVariable Integer id, Model model) {
+        Photo photo = getPhotoById(id);
+        model.addAttribute("photo", photo);
+        model.addAttribute("categoryList", categoryRepository.findAll());
+        return "/photos/edit";
+    }
+
+    @PostMapping("/edit/{id}")
+    public String doEdit(
+            @PathVariable Integer id,
+            @Valid @ModelAttribute("photo") Photo formPhoto,
+            BindingResult bindingResult,
+            RedirectAttributes redirectAttributes,
+            Model model
+    ) {
+        Photo photoToEdit = getPhotoById(id);
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("categoryList", categoryRepository.findAll());
+            return "/photos/edit";
+        }
+
+        formPhoto.setId(photoToEdit.getId());
+        photoRepository.save(formPhoto);
+
+        return "redirect:/photos";
+    }
+
+    @PostMapping("/delete/{id}")
+    public String delete(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
+        Photo photoToDelete = getPhotoById(id);
+        photoRepository.delete(photoToDelete);
+        return "redirect:/photos";
+    }
+
+
+    private Photo getPhotoById(Integer id) {
+        Optional<Photo> result = photoRepository.findById(id);
+
+        if (result.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "photo with id " + id + " not found");
+        }
+        return result.get();
+    }
+
 
 }
